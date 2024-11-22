@@ -1,5 +1,5 @@
 const cepCadastro = document.getElementById('cep');
-const btnSub = document.getElementById('submit');
+const cpfCadastro = document.getElementById('cpf');
 
 async function buscarCEP(cep) {
     try {
@@ -23,6 +23,7 @@ async function buscarCEP(cep) {
         return null; 
     }
 }
+
 cepCadastro.addEventListener('input', async function () {
     const cep = cepCadastro.value.replace(/\D/g, ''); 
 
@@ -38,3 +39,42 @@ cepCadastro.addEventListener('input', async function () {
     }
 });
 
+function validarCpf(cpf) {
+    // CONFERINDO SE O CPF NÃO TEM LETRAS
+    cpf = cpf.replace(/[^\d]+/g, '');
+
+    if (cpf.length !== 11) return false;
+
+    // ELIMINA CPFS INVALIDOS CONHECIDOS
+    if (/^(\d)\1+$/.test(cpf)) return false;
+
+    let soma = 0;
+    let resto;
+
+    for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.substring(i, i + 1)) * (10 - i);
+    }
+
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+    soma = 0;
+    for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.substring(i, i + 1)) * (11 - i);
+    }
+
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+    return true;
+}
+
+// Teste da função de validação
+const cpf = cpfCadastro.value;
+if (validarCpf(cpf)) {
+    alert("CPF Válido: " + cpf);
+} else {
+    alert("CPF Inválido: " + cpf);
+}
