@@ -1,7 +1,8 @@
+
+
 const cepCadastro = document.getElementById('cep');
 const cpfCadastro = document.getElementById('cpf');
 const emailCadastro = document.getElementById('email')
-const apiKey = '16284|UrsKY3PnZt30EEhPt9q53qrjxz0CH6ZH';
 
 async function buscarCEP(cep) {
     try {
@@ -73,6 +74,7 @@ function validarCpf(cpf) {
     return true;
 }
 
+// Teste da função de validação
 const cpf = cpfCadastro.value;
 if (validarCpf(cpf)) {
     alert("CPF Válido: " + cpf);
@@ -80,57 +82,35 @@ if (validarCpf(cpf)) {
     alert("CPF Inválido: " + cpf);
 }
 
-function validarEmail(email) {
-    return /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i.test(email);
-}
-
-async function validarEmailComApi(email) {
-    const url = `https://api.invertexto.com/api-validador-email?email=${email}&apiKey=${apiKey}`;
-
-    try {
-        const resposta = await fetch(url);
-        const dados = await resposta.json();
-
-        if (dados.status === 'OK') {
-            const resultado = dados.resultado;
-            if (!resultado.emailValido || !resultado.registrosMX || resultado.emailTemporario) {
-                console.log("E-mail inválido ou descartável detectado.");
-                return false;
-            }
-            return true;
-        } else {
-            console.error("Erro ao validar o e-mail:", dados.mensagem);
-            return false;
-        }
-    } catch (erro) {
-        console.error("Erro de conexão com a API:", erro);
+async function validarEmail(email){
+    if( /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i.test(email)){
+        console.log("Email válido!!")
+        return true;
+    }else{
+        console.log("Email inválido!!")
         return false;
     }
+
 }
 
-
-emailCadastro.addEventListener('blur', async function () {
-    const email = emailCadastro.value.trim();
-
-    if (!validarEmail(email)) {
-        emailCadastro.style.borderColor = "red";
-        emailCadastro.title = "Formato inválido (ex: usuario@dominio.com).";
-        return;
+emailCadastro.addEventListener('blur', function () {
+    const email = emailCadastro.value;
+    if (validarEmail(email) ) {
+        emailCadastro.title = ""; 
+    } else{
+        emailCadastro.title = "Por favor, insira um email válido (ex: usuario@dominio.com).";
     }
-
-    const eValido = await validarEmailComApi(email);
-    emailCadastro.title = eValido ? "" : "E-mail inválido ou descartável.";
 });
 
 document.getElementById('formCadastro').addEventListener('submit', function (event) {
-    event.preventDefault(); 
+    event.preventDefault(); // Impede o envio do formulário caso haja erro
+
     const email = emailCadastro.value.trim();
     const cpf = cpfCadastro.value.replace(/\D/g, '');
     const cep = cepCadastro.value.replace(/\D/g, '');
 
-    
-    if (!validarEmail(email) || !(validarEmailComApi(email))) {
-        alert("E-mail inválido ou descartável.");
+    if (!validarEmail(email)) {
+        alert("Por favor, insira um email válido.");
         return;
     }
 
@@ -145,5 +125,5 @@ document.getElementById('formCadastro').addEventListener('submit', function (eve
     }
 
     alert("Cadastro realizado com sucesso!");
-   
+    // Aqui você pode enviar os dados do formulário para o servidor
 });
