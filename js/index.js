@@ -103,7 +103,7 @@ emailCadastro.addEventListener('blur', function () {
 });
 
 document.getElementById('formCadastro').addEventListener('submit', function (event) {
-    event.preventDefault(); // Impede o envio do formulário caso haja erro
+    event.preventDefault();
 
     const email = emailCadastro.value.trim();
     const cpf = cpfCadastro.value.replace(/\D/g, '');
@@ -125,5 +125,5 @@ document.getElementById('formCadastro').addEventListener('submit', function (eve
     }
 
     alert("Cadastro realizado com sucesso!");
-    // Aqui você pode enviar os dados do formulário para o servidor
+   
 });
