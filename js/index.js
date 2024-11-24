@@ -1,5 +1,7 @@
 const cepCadastro = document.getElementById('cep');
 const cpfCadastro = document.getElementById('cpf');
+const emailCadastro = document.getElementById('email')
+const apiKey = '16284|UrsKY3PnZt30EEhPt9q53qrjxz0CH6ZH';
 
 async function buscarCEP(cep) {
     try {
@@ -71,10 +73,77 @@ function validarCpf(cpf) {
     return true;
 }
 
-// Teste da função de validação
 const cpf = cpfCadastro.value;
 if (validarCpf(cpf)) {
     alert("CPF Válido: " + cpf);
 } else {
     alert("CPF Inválido: " + cpf);
 }
+
+function validarEmail(email) {
+    return /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i.test(email);
+}
+
+async function validarEmailComApi(email) {
+    const url = `https://api.invertexto.com/api-validador-email?email=${email}&apiKey=${apiKey}`;
+
+    try {
+        const resposta = await fetch(url);
+        const dados = await resposta.json();
+
+        if (dados.status === 'OK') {
+            const resultado = dados.resultado;
+            if (!resultado.emailValido || !resultado.registrosMX || resultado.emailTemporario) {
+                console.log("E-mail inválido ou descartável detectado.");
+                return false;
+            }
+            return true;
+        } else {
+            console.error("Erro ao validar o e-mail:", dados.mensagem);
+            return false;
+        }
+    } catch (erro) {
+        console.error("Erro de conexão com a API:", erro);
+        return false;
+    }
+}
+
+
+emailCadastro.addEventListener('blur', async function () {
+    const email = emailCadastro.value.trim();
+
+    if (!validarEmail(email)) {
+        emailCadastro.style.borderColor = "red";
+        emailCadastro.title = "Formato inválido (ex: usuario@dominio.com).";
+        return;
+    }
+
+    const eValido = await validarEmailComApi(email);
+    emailCadastro.title = eValido ? "" : "E-mail inválido ou descartável.";
+});
+
+document.getElementById('formCadastro').addEventListener('submit', function (event) {
+    event.preventDefault(); 
+    const email = emailCadastro.value.trim();
+    const cpf = cpfCadastro.value.replace(/\D/g, '');
+    const cep = cepCadastro.value.replace(/\D/g, '');
+
+    
+    if (!validarEmail(email) || !(validarEmailComApi(email))) {
+        alert("E-mail inválido ou descartável.");
+        return;
+    }
+
+    if (!validarCpf(cpf)) {
+        alert("Por favor, insira um CPF válido.");
+        return;
+    }
+
+    if (cep.length !== 8) {
+        alert("Por favor, insira um CEP válido.");
+        return;
+    }
+
+    alert("Cadastro realizado com sucesso!");
+   
+});
