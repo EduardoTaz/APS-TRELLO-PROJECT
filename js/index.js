@@ -1,5 +1,8 @@
+
+
 const cepCadastro = document.getElementById('cep');
 const cpfCadastro = document.getElementById('cpf');
+const emailCadastro = document.getElementById('email')
 
 async function buscarCEP(cep) {
     try {
@@ -75,6 +78,50 @@ function validarCpf(cpf) {
 const cpf = cpfCadastro.value;
 if (validarCpf(cpf)) {
     alert("CPF Válido: " + cpf);
-} else {
-    alert("CPF Inválido: " + cpf);
+} 
+
+async function validarEmail(email){
+    if( /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i.test(email)){
+        console.log("Email válido!!")
+        return true;
+    }else{
+        console.log("Email inválido!!")
+        return false;
+    }
+
 }
+
+emailCadastro.addEventListener('blur', function () {
+    const email = emailCadastro.value;
+    if (validarEmail(email) ) {
+        emailCadastro.title = ""; 
+    } else{
+        emailCadastro.title = "Por favor, insira um email válido (ex: usuario@dominio.com).";
+    }
+});
+
+document.getElementById('formCadastro').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const email = emailCadastro.value.trim();
+    const cpf = cpfCadastro.value.replace(/\D/g, '');
+    const cep = cepCadastro.value.replace(/\D/g, '');
+
+    if (!validarEmail(email)) {
+        alert("Por favor, insira um email válido.");
+        return;
+    }
+
+    if (!validarCpf(cpf)) {
+        alert("Por favor, insira um CPF válido.");
+        return;
+    }
+
+    if (cep.length !== 8) {
+        alert("Por favor, insira um CEP válido.");
+        return;
+    }
+
+    alert("Cadastro realizado com sucesso!");
+   
+});
