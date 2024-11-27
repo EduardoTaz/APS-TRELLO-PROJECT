@@ -1,6 +1,9 @@
+
+
 const cepCadastro = document.getElementById('cep');
 const cpfCadastro = document.getElementById('cpf');
-const emailCadastro = document.getElementById('email')
+const emailCadastro = document.getElementById('email');
+const celularCadastro = document.getElementById('celular');
 
 async function buscarCEP(cep) {
     try {
@@ -89,6 +92,16 @@ async function validarEmail(email){
 
 }
 
+function validarCelular(celular) {
+    celular = celular.replace(/\D/g, '');
+
+    if (/^[1-9][0-9]{10}$/.test(celular)) {
+        return true;
+    }
+
+    return false;
+}
+
 emailCadastro.addEventListener('blur', function () {
     const email = emailCadastro.value;
     if (validarEmail(email) ) {
@@ -104,6 +117,7 @@ document.getElementById('formCadastro').addEventListener('submit', function (eve
     const email = emailCadastro.value.trim();
     const cpf = cpfCadastro.value.replace(/\D/g, '');
     const cep = cepCadastro.value.replace(/\D/g, '');
+    const celular = celularCadastro.value.replace(/\D/g, '');
 
     if (!validarEmail(email)) {
         alert("Por favor, insira um email válido.");
@@ -117,6 +131,11 @@ document.getElementById('formCadastro').addEventListener('submit', function (eve
 
     if (cep.length !== 8) {
         alert("Por favor, insira um CEP válido.");
+        return;
+    }
+
+    if (!validarCelular(celular)) {
+        alert("Por favor, insira um número de celular válido (11 dígitos, com DDD).");
         return;
     }
 
