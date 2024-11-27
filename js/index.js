@@ -1,5 +1,3 @@
-
-
 const cepCadastro = document.getElementById('cep');
 const cpfCadastro = document.getElementById('cpf');
 const emailCadastro = document.getElementById('email')
