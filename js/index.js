@@ -111,6 +111,7 @@ emailCadastro.addEventListener('blur', function () {
     }
 });
 
+
 document.getElementById('formCadastro').addEventListener('submit', function (event) {
     event.preventDefault();
 
@@ -141,4 +142,27 @@ document.getElementById('formCadastro').addEventListener('submit', function (eve
 
     alert("Cadastro realizado com sucesso!");
    
+
+     limparCampos();
 });
+
+function limparCampos(){
+    
+    document.getElementById("formCadastro").reset();
+
+    document.getElementById("nome").value = '';
+    document.getElementById("email").value = '';
+    document.getElementById("cpf").value = '';
+    document.getElementById("celular").value = '';
+    document.getElementById("sexo").value = '';
+    document.getElementById("profissao").value = '';
+    document.getElementById("cep").value = '';
+    document.getElementById("logradouro").value = '';
+    document.getElementById("numero").value = '';
+    document.getElementById("bairro").value = '';
+    document.getElementById("cidade").value = '';
+    document.getElementById("estado").value = '';
+    document.getElementById("complemento").value = '';
+
+
+}
