@@ -1,5 +1,9 @@
+
+
 const cepCadastro = document.getElementById('cep');
 const cpfCadastro = document.getElementById('cpf');
+const emailCadastro = document.getElementById('email');
+const celularCadastro = document.getElementById('celular');
 
 async function buscarCEP(cep) {
     try {
@@ -75,6 +79,90 @@ function validarCpf(cpf) {
 const cpf = cpfCadastro.value;
 if (validarCpf(cpf)) {
     alert("CPF Válido: " + cpf);
-} else {
-    alert("CPF Inválido: " + cpf);
+} 
+
+async function validarEmail(email){
+    if( /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i.test(email)){
+        console.log("Email válido!!")
+        return true;
+    }else{
+        console.log("Email inválido!!")
+        return false;
+    }
+
+}
+
+function validarCelular(celular) {
+    celular = celular.replace(/\D/g, '');
+
+    if (/^[1-9][0-9]{10}$/.test(celular)) {
+        return true;
+    }
+
+    return false;
+}
+
+emailCadastro.addEventListener('blur', function () {
+    const email = emailCadastro.value;
+    if (validarEmail(email) ) {
+        emailCadastro.title = ""; 
+    } else{
+        emailCadastro.title = "Por favor, insira um email válido (ex: usuario@dominio.com).";
+    }
+});
+
+
+document.getElementById('formCadastro').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const email = emailCadastro.value.trim();
+    const cpf = cpfCadastro.value.replace(/\D/g, '');
+    const cep = cepCadastro.value.replace(/\D/g, '');
+    const celular = celularCadastro.value.replace(/\D/g, '');
+
+    if (!validarEmail(email)) {
+        alert("Por favor, insira um email válido.");
+        return;
+    }
+
+    if (!validarCpf(cpf)) {
+        alert("Por favor, insira um CPF válido.");
+        return;
+    }
+
+    if (cep.length !== 8) {
+        alert("Por favor, insira um CEP válido.");
+        return;
+    }
+
+    if (!validarCelular(celular)) {
+        alert("Por favor, insira um número de celular válido (11 dígitos, com DDD).");
+        return;
+    }
+
+    alert("Cadastro realizado com sucesso!");
+   
+
+     limparCampos();
+});
+
+function limparCampos(){
+    
+    document.getElementById("formCadastro").reset();
+
+    document.getElementById("nome").value = '';
+    document.getElementById("email").value = '';
+    document.getElementById("cpf").value = '';
+    document.getElementById("celular").value = '';
+    document.getElementById("sexo").value = '';
+    document.getElementById("profissao").value = '';
+    document.getElementById("cep").value = '';
+    document.getElementById("logradouro").value = '';
+    document.getElementById("numero").value = '';
+    document.getElementById("bairro").value = '';
+    document.getElementById("cidade").value = '';
+    document.getElementById("estado").value = '';
+    document.getElementById("complemento").value = '';
+
+
 }
